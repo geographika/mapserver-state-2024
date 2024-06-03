@@ -1,0 +1,207 @@
+<section data-markdown>
+    <script type="text/template">
+        <img class="plain" src="images/logo-osgeo.svg" style="background: none;" />
+
+        ## State of MapServer 2024
+
+        #### by Seth Girvin
+
+        <img class="plain" src="images/foss4g.png" style="background: none;" />
+    </script>
+</section>
+
+<section data-markdown data-background="images/MapServer_logo.svg.png" data-background-opacity="0.1" data-background-size="50%">
+    <script type="text/template">
+        ### MapServer 8.2 Release
+
+        - July, 2024 - [MapServer 8.2.0-rc1](https://mapserver.org/development/announce/8-2.html)
+        - **19** contributors to this release
+        - **470** Commits
+        - Full [CHANGELOG](https://github.com/MapServer/MapServer/compare/rel-8-0-1...main)
+    </script>
+</section>
+
+<section data-markdown>
+    <script type="text/template">
+        ### [RFC 138](https://mapserver.org/development/rfc/ms-rfc-138.html) Reference SLD files in Mapfiles
+
+        - Add a reference to an SLD file in a [LAYER STYLEITEM](https://mapserver.org/mapfile/layer.html#mapfile-layer-styleitem)
+        <pre>
+<code class="language-scala" data-trim>
+LAYER
+    DATA "hexagon"
+    TYPE LINE
+    STYLEITEM "sld://data/mysldfile.sld"
+END
+</code>
+</pre>
+        - Styles will be applied to the `LAYER` from the `SLD` file
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/1200px-Open_Geospatial_Consortium_logo.svg.png" data-background-size="60%" data-background-opacity="5%">
+    <script type="text/template">
+        ### [OGC API Features: Part 2 - CRS](https://github.com/MapServer/MapServer/pull/6893)
+
+        - **`crs`**, **`bbox`**, and **`bbox-crs`** request parameters now supported
+
+        -
+        <sub>http://localhost/ogcapi/collections/mn_counties/items?f=json</sub>
+        -
+        <sub>`&crs=http://www.opengis.net/def/crs/EPSG/0/4326`</sub>
+        -
+        <sub>`&bbox=-90,-180,90,0&bbox-crs=http://www.opengis.net/def/crs/EPSG/0/4326`</sub>
+
+
+    </script>
+</section>
+
+<section data-markdown>
+    <script type="text/template">
+        ### [OGC API Features: Part 2 - CRS](https://github.com/MapServer/MapServer/pull/6893)
+
+        - Add supported projections to the `MAP` or `LAYER` `METADATA`
+        <pre>
+<code class="language-scala" data-trim>
+LAYER
+    ...
+    METADATA
+      # storageCrs is first in the list
+      "oga_srs" "EPSG:32615 EPSG:4326"
+    END 
+END
+</code>
+</pre>
+    </script>
+</section>
+
+<section data-markdown data-background="images/custom-wms-projection.png" data-background-opacity="0.3" data-background-size="100%">
+    <script type="text/template">
+        ### [Custom Projections for WMS](https://github.com/MapServer/MapServer/pull/6795)
+
+        - Add projections to `/usr/share/proj/`
+        <sub>`&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&CRS=esri:54009`</sub>
+
+<pre>
+<code class="language-python" data-noescape data-trim>
+MAP
+    EXTENT -15029959 -3957687 1941951 8824504
+    # World Mollweide projection (ESRI:54009)
+    # this is not a EPSG projection so we add a custom projection here
+    PROJECTION
+    	"init=ESRI:54009"
+    END
+    WEB
+    	METADATA
+     		"wms_srs" "EPSG:4326 ESRI:54009"
+            ...
+</code>
+</pre>
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/square-root-variable-solid.svg" data-background-size="60%" data-background-opacity="5%">
+    <script type="text/template">
+        ### New Expression Support
+
+        - Expressions added to [LABEL PRIORITY](https://mapserver.org/mapfile/label.html#mapfile-label-priority)
+        - Expressions added to [STYLE SIZE](https://mapserver.org/mapfile/style.html#mapfile-style-size)
+<pre>
+<code class="language-scala" data-trim>
+STYLE
+    SYMBOL "circle"
+    SIZE ([priority] *2) # double the priority attribute to calculate the size
+    COLOR "#4A993A"
+END
+</code>
+</pre>
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/gears-solid.svg" data-background-size="60%" data-background-opacity="5%">
+    <script type="text/template">
+        ### New [CONFIG](https://www.mapserver.org/mapfile/config.html) Options
+
+        - See [WEB](https://mapserver.org/mapfile/web.html) options `EMPTY` and `ERROR`
+
+        <pre>
+<code class="language-python" data-trim>
+CONFIG
+  ENV
+    MS_ERROR_URL "/error.html"
+    MS_EMPTY_URL "/empty.html"
+  END
+END
+</code>
+</pre>
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/key-solid.svg" data-background-size="40%" data-background-opacity="5%">
+    <script type="text/template">
+        ### [Use Keys for Mapfile URLs](https://github.com/MapServer/MapServer/pull/6862)
+
+        - Works the same way as OGC Features API URLs
+        - http://example.com/mykey/?request=WMS...
+
+        <pre>
+<code class="language-python" data-trim>
+CONFIG
+  MAPS
+    mykey "/path/to/mapfile"
+  END
+END
+</code>
+</pre>
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/users-between-lines-solid.svg" data-background-size="40%" data-background-opacity="10%">
+    <script type="text/template">
+        ## New Workshop - Getting Started with MapServer
+
+        - First presented at [FOSS4G Europe 2024](https://talks.osgeo.org/foss4g-europe-2024-workshops/talk/HMEM8Z/)
+        - Available at https://geographika.github.io/getting-started-with-mapserver/
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/workshop.png" data-background-size="50%" data-background-opacity="90%">
+    <script type="text/template">
+    </script>
+</section>
+
+<section data-markdown>
+    <script type="text/template">
+        ## Coming Next...8.4 Release
+
+        - [4 new blending operations](https://github.com/MapServer/MapServer/pull/7065): `hsl-color`, `hsl-hue`, `hsl-luminosity`, `hsl-saturation`
+        - See [LAYER COMPOSITE](https://www.mapserver.org/mapfile/composite.html) for more details
+
+        <img class="border" src="images/compop.png" />
+    </script>
+</section>
+
+<section data-markdown data-background-image="images/heart-regular.svg" data-background-size="20%" data-background-opacity="10%">
+    <script type="text/template">
+        ### Supporting MapServer
+
+        [Sponsorship](https://github.com/MapServer/MapServer/wiki/Sponsorship) and [Sponsorship Opportunities](https://github.com/MapServer/MapServer/wiki/MapServer-2024-Sponsorship-Opportunities)
+        - Codesprints - for example the [OSGeo Community Sprint](https://wiki.osgeo.org/wiki/OSGeo_Community_Sprint_2023)
+        - Features - OGC API - Maps, Coverages, Tiles
+        - Security and Vulnerability Patches, Code Maintenance, Documentation
+    </script>
+</section>
+
+<section data-markdown>
+    <script type="text/template">
+        <img class="plain" src="images/banner.png" style="background: none;" />
+
+        ### Thanks for Listening!
+
+        <a href="https://mastodon.social/@geographika" style="text-decoration: none;">
+            <img src="images/mastodon.png" alt="Mastodon Icon" style="width: 50px; vertical-align: middle;">
+            <span style="vertical-align: middle;">@geographika</span>
+        </a>
+
+    </script>
+</section>
